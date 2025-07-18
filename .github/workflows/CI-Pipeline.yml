@@ -1,0 +1,42 @@
+name: CI Pipeline to staging/production environment
+
+on:
+  push:
+    branches: 
+      - staging
+      - main
+
+jobs:
+  code-quality-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@v2
+      with:
+        projectBaseDir: .
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker Image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bookstore-api:latest .
+
+    - name: Push Docker Image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/bookstore-api:latest

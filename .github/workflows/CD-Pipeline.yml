@@ -1,0 +1,37 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Docker Build and Push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/bookstore-api:latest
+
+    - name: Setup Helm
+      uses: azure/setup-helm@v3
+
+    - name: Deploy to Kubernetes
+      run: |
+        helm upgrade --install bookstore helm/bookstore-chart \
+        --set image.repository=${{ secrets.DOCKER_USERNAME }}/bookstore-api \
+        --set image.tag=latest

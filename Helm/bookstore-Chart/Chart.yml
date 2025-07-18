@@ -1,0 +1,4 @@
+apiVersion: v2
+name: bookstore-chart
+description: Helm chart for FastAPI bookstore
+version: 0.1.0

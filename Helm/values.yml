@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: bookstore-api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: bookstore.local
+      paths:
+        - path: /
+          pathType: Prefix
