@@ -26,6 +26,9 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@v2
       with:
         projectBaseDir: .
+              args:>
+              -Dsonar.organization=mohmolokwane
+              -Dsonar.projectkey=mohmolokwane_docker-pipeline-demo
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
