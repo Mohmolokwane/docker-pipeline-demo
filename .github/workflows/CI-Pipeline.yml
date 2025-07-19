@@ -1,4 +1,4 @@
-name: CI Pipeline to staging/production environments
+name: CI Pipeline to staging/production environment
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
       with:
         projectBaseDir: .
         args: >
-            -Dsonar.organization=mohmolokwane
-            -Dsonar.projectkey=mohmolokwane_docker-pipeline-demo
+            -sonar.organization=mohmolokwane
+            -sonar.projectkey=mohmolokwane_docker-pipeline-demo
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
