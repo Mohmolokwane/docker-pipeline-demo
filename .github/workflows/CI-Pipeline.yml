@@ -1,4 +1,4 @@
-name: CI Pipeline to staging/production environment
+name: CI Pipeline to staging/production environments
 
 on:
   push:
